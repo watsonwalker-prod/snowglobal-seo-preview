@@ -1,0 +1,23 @@
+/* Automatic 46% off The Set — list struck, sale shown. Light brand on PDP; inherits on dark Snow Globe page. */
+.price-was {
+  text-decoration: line-through;
+  margin-right: .45em;
+  font-weight: 400;
+  opacity: .7;
+}
+.price-now { font-weight: 500; }
+.pdp-price .price-was,
+.pdp-sticky-price .price-was,
+.cart-line-price .price-was,
+.sum-price .price-was,
+.cart-total .price-was { color: #5e4c3e; opacity: 1; }
+.pdp-price .price-now,
+.pdp-sticky-price .price-now,
+.cart-line-price .price-now,
+.sum-price .price-now,
+.cart-total .price-now { color: #1a100c; }
+
+.mf-price .price-was, .piece-price .price-was { color: inherit; }
+.mf-price .price-now, .piece-price .price-now { color: inherit; }
+.pdp-info .mf-price .price-was, .mf-price .price-was { color: #5e4c3e; opacity: 1; }
+.pdp-info .mf-price .price-now, .mf-price .price-now { color: #8a5a2e; }

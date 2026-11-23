@@ -1,0 +1,162 @@
+/* Snow Globe Effect v3: built on the Winter Light / Hearth & Ritual collection system (styles.css + angels/hol components). */
+html,body{background-color:#0d1a14}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(rgba(13,10,9,.62),rgba(13,10,9,.74)),url(/snow-globe-effect/images/velvet-emerald.jpg) center top/1280px auto repeat;background-image:linear-gradient(rgba(13,10,9,.62),rgba(13,10,9,.74)),image-set(url(/snow-globe-effect/images/velvet-emerald.webp) type("image/webp"),url(/snow-globe-effect/images/velvet-emerald.jpg) type("image/jpeg"))}
+html,body{overflow-x:hidden}
+.hx-note{font-family:var(--font-mono);font-size:11px;color:var(--mute);text-align:center;padding:.5rem;background:#2a1a12;border-bottom:1px solid var(--line)}
+.hx-buy{display:block;width:100%;text-align:center;padding:1rem;margin:1.2rem 0 .5rem;background:var(--bone);color:#1a100c;font-family:var(--font-mono);letter-spacing:.08em;text-transform:uppercase;border:0;cursor:pointer}
+.hx-buy:hover{background:var(--gold)}
+.hol-hero{position:relative;height:calc(100svh - var(--nav-h,64px));min-height:560px;max-height:960px;overflow:hidden;background:#0d0a09}
+.hol-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 38%}
+.hol-hero .cap{position:absolute;left:0;right:0;bottom:0;padding:2rem clamp(1rem,4vw,3rem);display:flex;justify-content:space-between;align-items:flex-end;gap:1.5rem;flex-wrap:wrap;background:linear-gradient(transparent,rgba(0,0,0,.72))}
+.hol-hero .hero-title{margin:.25rem 0 0}
+@media (max-width:800px){.hol-hero{height:auto;min-height:0;aspect-ratio:4/5}.hol-hero img{object-position:center 30%}}
+.angels-line{margin:.35rem 0 0;font-size:clamp(1rem,2.2vw,1.35rem);opacity:.9}
+.angels-intro{max-width:38rem;opacity:.8}
+.hero-notify-btn{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid var(--line-btn);color:var(--neon);font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;background:color-mix(in srgb,var(--void) 45%,transparent);transition:border-color .2s,color .2s}
+.hero-notify-btn:hover{border-color:var(--neon);color:var(--ink-bright)}
+.angels-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem 1.25rem}
+.angels-grid .piece{display:flex;flex-direction:column}
+.angels-grid .a-media{display:block;aspect-ratio:3/4;overflow:hidden;background:#111}
+.angels-grid .a-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;transition:transform .6s ease}
+.angels-grid .a-media:hover img{transform:scale(1.025)}
+.angels-grid .piece-meta{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-top:.75rem}
+.angels-grid .piece-line{margin:.3rem 0 0;opacity:.75;font-size:.95rem}
+.piece-buy{margin-top:.9rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.piece-buy .btn[aria-disabled="true"]{opacity:.55;pointer-events:none}
+.piece-buy .fine{font-size:11px;opacity:.6}
+@media (max-width:900px){.angels-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem .75rem}.angels-grid .piece--set{grid-column:span 2}.angels-grid .piece--set .a-media{aspect-ratio:4/5}}
+@media (max-width:520px){.angels-grid{grid-template-columns:1fr}.angels-grid .piece--set{grid-column:auto}}
+.hol-party-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}
+.hol-wide{margin:0;aspect-ratio:3/2;overflow:hidden;background:#111;grid-column:span 2}.hol-wide img,.hol-tall img{display:block;width:100%;height:100%;object-fit:cover}
+.hol-tall{margin:0;aspect-ratio:3/4;overflow:hidden;background:#111}
+@media (max-width:800px){.hol-party-grid{grid-template-columns:1fr;gap:.75rem}.hol-wide{grid-column:auto}}
+.sge-frames{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}
+.sge-frame{margin:0;padding:clamp(1.5rem,4vw,3.5rem);background:radial-gradient(80% 70% at 50% 40%,rgba(244,236,228,.07),transparent 70%);border:1px solid var(--line);text-align:center}
+.sge-frame img{display:block;width:100%;max-width:440px;height:auto;margin:0 auto}
+.sge-frame figcaption{margin-top:1rem;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+@media (max-width:640px){.sge-frames{grid-template-columns:1fr}}
+.angels-notify{max-width:40rem;margin:0 auto;text-align:center;padding:5rem clamp(1rem,4vw,3rem) 4.5rem}
+.angels-notify .section-title{text-wrap:balance}
+.angels-notify-line{margin:.6rem 0 0;opacity:.85;font-size:1.05rem}
+.angels-notify .fine{opacity:.7;font-size:.9rem;margin:.9rem 0 0}
+.velvet-cta{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:64px;margin-top:2rem;padding:0 28px;border:0;border-radius:3px;color:#fff4ea;font-family:var(--font-display);font-size:clamp(15px,1.6vw,18px);text-decoration:none;cursor:pointer;background:radial-gradient(120% 140% at 30% 10%,rgba(255,190,150,.35),transparent 55%),linear-gradient(180deg,#d4683f 0%,#b44a2a 55%,#8e3519 100%);box-shadow:inset 0 1px 0 rgba(255,215,190,.35),inset 0 -10px 18px rgba(70,15,5,.45),0 10px 24px -10px rgba(0,0,0,.7);transition:transform .25s,filter .25s}
+.velvet-cta:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.sge-details{max-width:1100px;margin:0 auto;padding:0 clamp(1rem,4vw,3rem) 3rem}
+.hol-cross{text-align:center;padding:0 1rem 3rem}.hol-cross a{color:inherit}
+.lg-layer{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:1rem}
+.lg-layer[hidden]{display:none}
+.lg-scrim{position:absolute;inset:0;background:rgba(10,6,4,.72);backdrop-filter:blur(3px)}
+.lg-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);max-width:760px;width:100%;max-height:calc(100dvh - 2rem);overflow:auto;background:var(--void);border:1px solid var(--line-btn)}
+.lg-art{margin:0;min-height:100%}.lg-art img{width:100%;height:100%;object-fit:cover}
+.lg-copy{padding:2rem 1.6rem}
+.lg-title{font-family:var(--font-display);font-weight:700;font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.02;margin:.4rem 0 .8rem}
+.lg-lede{color:var(--warm);margin:0 0 1.2rem}
+.lg-row{display:flex;border:1px solid var(--line-btn)}
+.lg-row input{flex:1;min-width:0;background:transparent;border:0;color:var(--ink);padding:.85rem;font:inherit}
+.lg-row button{background:var(--bone);color:#1a100c;border:0;padding:0 1rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
+.lg-close{position:absolute;top:.6rem;right:.7rem;background:none;border:0;color:var(--mute);font-family:var(--font-mono);font-size:11px;cursor:pointer;z-index:2}
+.lg-done .lg-codebox{font-family:var(--font-mono);font-size:1.4rem;letter-spacing:.12em;border:1px dashed var(--gold);color:var(--gold);padding:.7rem;text-align:center;margin:.8rem 0}
+.lg-fine{font-size:11px;color:var(--mute);margin-top:.8rem}
+@media(max-width:640px){.lg-card{grid-template-columns:1fr}.lg-art{max-height:34vh;overflow:hidden}.lg-copy{padding:1.3rem}}
+@media (max-width:700px){.nav-links a:not([data-lg-open]):not([data-home]){display:none}.hx-note{font-size:10px}}
+
+.hol-hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%}
+@media (max-width:800px){.hol-hero video{object-position:center 30%}}
+@media (min-width:801px){.hol-hero video{object-position:right center}}
+@media (prefers-reduced-motion:reduce){.hol-hero video{animation:none}}
+
+/* v5: hero follows the homepage moving-mock protocol (one muted looping inline video, linked to the PDP) */
+.sge-hero-media{position:absolute;inset:0;display:block}
+.hol-hero .cap{z-index:2;pointer-events:none}.hol-hero .cap a{pointer-events:auto}
+@media (min-width:801px){.hol-hero{height:calc(100svh - 118px);min-height:520px;max-height:none}}
+/* v6: center The Point; crop to the canvas so the baked left shadow and off-center room fall away; no gradient on the caption */
+.hol-hero{background:transparent}
+.hol-hero .cap{background:none}
+.hol-hero .sge-hero-media{position:absolute;top:0;bottom:0;left:50%;right:auto;transform:translateX(-50%);height:100%;aspect-ratio:506/758;overflow:hidden;box-shadow:none}
+.hol-hero .sge-hero-media video{position:absolute;inset:auto;left:-263.83%;top:-3.430%;width:379.45%;height:142.48%;max-width:none;object-fit:fill;transform:none}
+@media (max-width:800px){
+.hol-hero{aspect-ratio:auto;height:auto;padding-top:1rem}
+.hol-hero .sge-hero-media{position:relative;left:auto;top:auto;bottom:auto;transform:none;margin:0 auto;width:74vw;height:auto;aspect-ratio:632/948}
+.hol-hero .sge-hero-media video{left:-55.22%;top:-3.376%;width:170.89%;height:142.41%}
+.hol-hero .cap{position:relative}
+}
+
+/* v6: Ships Framed mocks sit in fixed-size light containers */
+.sge-frames .sge-frame{margin:0}
+.sge-frames .sge-frame img{display:block;width:100%;aspect-ratio:4/5;height:auto;object-fit:contain;background:#f4f1ec;padding:clamp(1rem,4%,2.5rem);box-sizing:border-box;box-shadow:none}
+/* v7: The Point inside mockbot's room. Art center (x1588.5 of 1920 desktop, x665.5 of 1080 mobile) pinned to viewport center */
+.hol-hero{background:#0b0a05}
+.hol-hero .sge-hero-media{position:absolute;inset:0;left:0;right:0;transform:none;aspect-ratio:auto;width:auto;height:auto;overflow:hidden}
+.hol-hero .sge-hero-media video{position:absolute;top:0;left:50%;height:100%;width:auto;aspect-ratio:16/9;max-width:none;object-fit:fill;transform:translateX(-82.73%);-webkit-mask-image:linear-gradient(to right,#000 92%,transparent);mask-image:linear-gradient(to right,#000 92%,transparent)}
+@media (max-width:800px){
+.hol-hero .sge-hero-media{position:relative;inset:auto;margin:0;width:100%;height:auto;aspect-ratio:4/5}
+.hol-hero .sge-hero-media video{top:0;left:50%;width:130%;height:auto;aspect-ratio:1080/1350;transform:translateX(-61.62%);-webkit-mask-image:none;mask-image:none}
+}
+@media (min-width:801px){.hol-hero .cap{left:auto;right:0;top:50%;bottom:auto;transform:translateY(-50%);width:min(33%,470px);flex-direction:column;align-items:flex-start;justify-content:center;gap:1.25rem}}
+
+/* v8: equal mobile cards */
+@media (max-width:900px){.angels-grid .piece--set .a-media{aspect-ratio:3/4}}
+/* v8 hero: apres-ski render. Art face desktop x1167 y23 450x676 of 1920x1080 (center 72.5%); mobile x259 y29 563x845 of 1080x1350 (center 50%) */
+.hol-hero .sge-hero-media video{transform:translateX(-72.5%);-webkit-mask-image:linear-gradient(to right,#000 84%,transparent);mask-image:linear-gradient(to right,#000 84%,transparent)}
+@media (max-width:800px){.hol-hero .sge-hero-media video{width:100%;transform:translateX(-50%);-webkit-mask-image:none;mask-image:none}}
+@media (min-width:801px){.hol-hero .cap{width:min(28%,420px)}}
+
+/* v9: Ships Framed = full-width light band, even padding, no boxed tiles */
+.hol-coll .sge-frames{background:#f4f1ec;padding:clamp(2rem,8vw,7rem) clamp(1.5rem,10vw,9rem);gap:clamp(1.5rem,6vw,6rem)}
+.sge-frames .sge-frame{border:0;background:none;padding:0}
+.sge-frames .sge-frame img{background:none;padding:0;aspect-ratio:auto;height:auto;filter:none}
+.sge-frames .sge-frame figcaption{color:#3a2f27}
+/* v9 hero: chalet lounge render, played as-is full-bleed (no shift/crop/fade/overlay). Canvas quad desktop x1115-1635/1920, mobile x225-855/1080 */
+.hol-hero .sge-hero-media{position:absolute;inset:0;left:0;right:0;width:auto;height:auto;transform:none;aspect-ratio:auto;overflow:hidden}
+.hol-hero .sge-hero-media video{position:absolute;inset:0;left:0;top:0;width:100%;height:100%;aspect-ratio:auto;transform:none;object-fit:cover;object-position:72% 35%;-webkit-mask-image:none;mask-image:none}
+@media (min-width:801px){.hol-hero .cap{left:0;right:0;top:auto;bottom:0;transform:none;width:auto;flex-direction:row;align-items:flex-end;justify-content:space-between;gap:1.5rem;background:none}}
+@media (max-width:800px){.hol-hero .sge-hero-media{position:relative;inset:auto;width:100%;aspect-ratio:4/5}.hol-hero .sge-hero-media video{width:100%;height:100%;object-position:50% 35%}}
+
+/* v10: no light band; frames sit on the velvet background */
+.hol-coll .sge-frames{background:none;padding:clamp(2rem,6vw,5rem) clamp(1rem,8vw,7rem)}
+.sge-frames .sge-frame{background:none;border:0}
+.sge-frames .sge-frame img{background:none}
+.sge-frames .sge-frame figcaption{color:inherit}
+/* v10: subtle scrim so caption + CTA read over the room */
+.hol-hero .cap{background:linear-gradient(to top,rgba(10,8,6,.62),rgba(10,8,6,.28) 65%,transparent)}
+.hol-hero .hero-notify-btn{background:rgba(12,9,7,.62)}
+@media (max-width:800px){.hol-hero .cap{background:none}}
+/* v10: popover mock = pair in green lodge */
+.lg-art img{object-position:50% 30%}
+@media(max-width:640px){.lg-art img{object-position:50% 28%}}
+/* v11 seasonal hero: art centered in render */
+@media (min-width:801px){.hol-hero .sge-hero-media video{object-position:50% 50%}}
+
+/* Hide native iOS/Safari play button on the Snow Globe hero video */
+.hol-hero-video::-webkit-media-controls,
+.hol-hero-video::-webkit-media-controls-panel,
+.hol-hero-video::-webkit-media-controls-play-button,
+.hol-hero-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* v20: animated WebP fallback when autoplay is blocked (iOS Low Power Mode, etc.) */
+.hol-hero .sge-hero-media .hol-hero-fallback{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 50%;
+  z-index:0;opacity:0;visibility:hidden;pointer-events:none;
+}
+@media (max-width:800px){
+  .hol-hero .sge-hero-media .hol-hero-fallback{object-position:50% 35%}
+}
+.hol-hero .sge-hero-media video{z-index:1}
+.sge-hero-media.is-fallback .hol-hero-fallback{
+  opacity:1;visibility:visible;z-index:2;
+}
+.sge-hero-media.is-fallback video{
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+.sge-hero-media.is-playing .hol-hero-fallback{
+  opacity:0;visibility:hidden;
+}
+.sge-hero-media.is-playing video{
+  opacity:1;visibility:visible;z-index:1;
+}

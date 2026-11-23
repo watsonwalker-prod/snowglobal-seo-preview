@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Cart — FRAIMOUS</title>
+  <meta name="description" content="Your FRAIMOUS cart. From $250." />
+  <meta name="theme-color" content="#1a100c" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20261027a" />
+  <style>
+    .cart-promo { margin: 1.25rem 0 1rem; max-width: 480px; }
+    .cart-promo-row { display: flex; gap: 8px; }
+    .cart-promo-row input { flex: 1; min-width: 0; text-transform: uppercase; }
+    .cart-promo-row .btn { min-height: 48px; padding: 0 18px; }
+    .cart-promo-msg { margin: 0.5rem 0 0; font-size: 0.85rem; color: var(--mute); }
+    .cart-promo-msg.is-err { color: #d4a574; }
+    .cart-promo-msg.is-ok { color: var(--ink); }
+    .price-was { text-decoration: line-through; color: #5e4c3e; margin-right: .45em; font-weight: 400; }
+    .price-now { color: #1a100c; }
+  </style>
+  <meta name="p:domain_verify" content="7796e72212abc0edba[phone removed]ef2d"/>
+</head>
+<body data-font="body">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="mark" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/works/thyrsus.html">Works</a>
+      <a href="/join" data-join-open>Join</a>
+      <a class="nav-cart" href="/cart.html" aria-current="page">Cart <span data-cart-count hidden></span></a>
+    </nav>
+  </header>
+
+  <main class="shop-wrap">
+    <p class="eyebrow tag mono" data-font="mono">Cart</p>
+    <h1 class="shop-title" data-font="display">YOUR CART</h1>
+
+    <div id="cart-empty" class="cart-empty" hidden>
+      <p>Nothing in the cart yet.</p>
+      <a class="btn btn--solid" href="works/thyrsus.html" data-font="mono">Shop Thyrsus</a>
+    </div>
+
+    <div id="cart-full" hidden>
+      <ul class="cart-list" id="cart-list"></ul>
+      <div class="cart-foot">
+        <p class="cart-total mono" data-font="mono">from $250</p>
+        <p class="cart-ship" data-cart-ship></p>
+        <p class="cart-note">Fraimous ships each frame on its own. <a href="/faq">FAQ</a></p>
+        <div class="cart-promo field">
+          <label for="cart-promo">Promo code <span class="opt">optional</span></label>
+          <div class="cart-promo-row">
+            <input id="cart-promo" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+            <button type="button" class="btn" id="cart-promo-apply" data-font="mono">Apply</button>
+            <button type="button" class="btn" id="cart-promo-remove" data-font="mono" hidden>Remove</button>
+          </div>
+          <p class="cart-promo-msg mono" id="cart-promo-msg" aria-live="polite" hidden></p>
+        </div>
+        <a class="btn btn--solid btn--lg" href="checkout.html" data-font="mono">Checkout</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <a class="mark mark--foot" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <p class="foot-tag tag mono" data-font="mono">Limited edition framed prints · ready to&nbsp;hang</p>
+    <p class="foot-copy mono" data-font="mono">© <span class="y"></span> FRAIMOUS · <a href="/faq">FAQ</a> · <a href="/angels">ANGELIC INTELLIGENCE</a> · <a class="foot-quiet" href="/soon">Out&nbsp;of&nbsp;stock</a></p>
+  <style id="foot-credit-css">.foot-credit{margin:.9rem 0 0;font-size:10.5px;line-height:1.2;letter-spacing:.04em;text-align:inherit}.foot-credit a{color:inherit;opacity:.28;text-decoration:none;transition:opacity .2s}.foot-credit a:hover,.foot-credit a:focus-visible{opacity:.55;text-decoration:none}</style><p class="foot-credit mono" data-font="mono"><a href="https://stephanybradford.com" target="_blank" rel="noopener">stephanybradford.com</a></p>
+  <p class="foot-copy foot-legal mono" data-font="mono">© 2025–2026 FRAIMOUS · FRAIMOUS™ is a trademark of FRAIMOUS · AI-assisted original art · Payments by Stripe · <a href="/legal">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/faq">Returns</a> · <a href="/any-likeness">Any Likeness</a> · <a href="mailto:hello@fraimous.com">Contact</a></p>
+  </footer>
+  <script>document.querySelectorAll(".y").forEach((n) => n.textContent = new Date().getFullYear());</script>
+  <script src="cart.js?v=20261120sge"></script>
+  <script>
+    (() => {
+      const C = window.FraimousCart;
+      const list = document.getElementById("cart-list");
+      const empty = document.getElementById("cart-empty");
+      const full = document.getElementById("cart-full");
+
+      const render = () => {
+        const items = C.read();
+        empty.hidden = items.length > 0;
+        full.hidden = items.length === 0;
+        list.innerHTML = "";
+        items.forEach((item, i) => {
+          const li = document.createElement("li");
+          li.className = "cart-line";
+          li.innerHTML = `
+            <a class="cart-line-media" href="works/${item.slug}.html">
+              <img data-cutout alt="" />
+            </a>
+            <div class="cart-line-meta">
+              <h2 class="cart-line-title" data-font="display">${C.titleLabel(item)}</h2>
+              <p class="cart-line-opts mono">${C.finishLabel ? C.finishLabel(item.finish) : "Luster"} · ${(item.finish === "canvas") ? "Gallery wrap" : C.frameLabel(item.frame)} · ${C.sizeLabel(item.size, item.finish)}</p>
+              <div class="qty" data-index="${i}">
+                <button type="button" class="qty-btn" data-delta="-1" aria-label="Decrease quantity">−</button>
+                <span class="qty-n">${item.qty || 1}</span>
+                <button type="button" class="qty-btn" data-delta="1" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+            <div class="cart-line-side">
+              <p class="cart-line-price mono">${C.linePriceHTML ? C.linePriceHTML(item) : C.money(C.lineTotal(item))}</p>
+              <button type="button" class="cart-remove" data-remove="${i}">Remove</button>
+            </div>
+          `;
+          { const im = li.querySelector("img[data-cutout]"); if (im) im.src = C.cutoutSrc(item.slug, item.frame, "", item.size, item.finish); }
+          list.appendChild(li);
+        });
+        const totalEl = document.querySelector(".cart-total");
+        if (totalEl) { if (!items.length) totalEl.textContent = "from $250"; else if (C.totalPriceHTML) totalEl.innerHTML = C.totalPriceHTML(items); else totalEl.textContent = C.money(C.printTotal(items)); }
+        const ship = document.querySelector("[data-cart-ship]");
+        if (ship) ship.textContent = items.length ? C.cartShipLine(items) : "";
+        C.paintCount();
+      };
+
+      list.addEventListener("click", (e) => {
+        const rm = e.target.closest("[data-remove]");
+        if (rm) {
+          C.remove(Number(rm.dataset.remove));
+          render();
+          return;
+        }
+        const btn = e.target.closest(".qty-btn");
+        if (!btn) return;
+        const wrap = btn.closest(".qty");
+        const items = C.read();
+        const i = Number(wrap.dataset.index);
+        const next = (items[i]?.qty || 1) + Number(btn.dataset.delta);
+        if (next < 1) C.remove(i);
+        else C.setQty(i, next);
+        render();
+      });
+
+      render();
+
+      // Promo code: MEMBER25 only. The server checks the code only (same answer for every email), then it is
+      // carried to checkout (localStorage "fraimous-promo"). Eligibility is decided server-side at checkout.
+      const PROMO_KEY = "fraimous-promo";
+      const pIn = document.getElementById("cart-promo");
+      const pBtn = document.getElementById("cart-promo-apply");
+      const pRm = document.getElementById("cart-promo-remove");
+      const pMsg = document.getElementById("cart-promo-msg");
+      const say = (msg, kind) => {
+        pMsg.textContent = msg || "";
+        pMsg.classList.toggle("is-err", kind === "err");
+        pMsg.classList.toggle("is-ok", kind === "ok");
+        pMsg.hidden = !msg;
+      };
+      const saved = () => { try { return localStorage.getItem(PROMO_KEY) || ""; } catch { return ""; } };
+      const save = (c) => { try { if (c) localStorage.setItem(PROMO_KEY, c); else localStorage.removeItem(PROMO_KEY); } catch { /* ignore */ } };
+      const messageFor = (code, apiMsg) => {
+        if (apiMsg) return apiMsg;
+        if (code === "5N0W84LL3FFCT") return "46% off The Set is already applied. No code needed.";
+        return `${code} saved. It applies at checkout if your email is eligible.`;
+      };
+      const label = () => {
+        pBtn.textContent = "Apply";
+        if (pRm) pRm.hidden = !saved();
+      };
+      let applying = false;
+      let lastClick = 0;
+      const apply = async () => {
+        const now = Date.now();
+        if (applying || now - lastClick < 400) return;
+        lastClick = now;
+        const code = String(pIn.value || "").trim().toUpperCase();
+        pIn.value = code;
+        if (!code) return;
+        if (saved() && saved() === code) {
+          say(messageFor(code), "ok");
+          label();
+          return;
+        }
+        applying = true;
+        pBtn.disabled = true;
+        say("Checking…");
+        try {
+          const r = await fetch("/api/promo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code }),
+          });
+          const out = await r.json().catch(() => ({}));
+          if (out && out.ok) {
+            save(out.code);
+            say(messageFor(out.code, out.message), "ok");
+          } else {
+            say((out && out.message) || "That code isn’t valid.", "err");
+          }
+        } catch {
+          say("Couldn’t check the code. Try again in a minute.", "err");
+        }
+        applying = false;
+        pBtn.disabled = false;
+        label();
+      };
+      const remove = () => {
+        if (applying) return;
+        save("");
+        pIn.value = "";
+        label();
+        say("Code removed.");
+      };
+      pBtn.addEventListener("click", apply);
+      if (pRm) pRm.addEventListener("click", remove);
+      pIn.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); apply(); } });
+      if (saved()) { pIn.value = saved(); say(messageFor(saved()), "ok"); }
+      label();
+    })();
+  </script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script src="/join.js?v=20261109chk"></script>
+<script src="/protect.js?v=20261006j"></script>
+<script src="/editions.js?v=20261120sge3"></script>
+<script src="/consent.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your order — FRAIMOUS</title>
+  <meta name="description" content="Look up your FRAIMOUS order." />
+  <meta property="og:site_name" content="FRAIMOUS" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Your order — FRAIMOUS" />
+  <meta property="og:description" content="Look up your FRAIMOUS order." />
+  <meta property="og:url" content="https://fraimous.com/order" />
+  <meta property="og:image" content="https://fraimous.com/og/home.jpg" />
+  <meta property="og:image:secure_url" content="https://fraimous.com/og/home.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Thyrsus, framed on a terracotta wall" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Your order — FRAIMOUS" />
+  <meta name="twitter:description" content="Look up your FRAIMOUS order." />
+  <meta name="twitter:image" content="https://fraimous.com/og/home.jpg" />
+  <meta name="twitter:image:alt" content="Thyrsus, framed on a terracotta wall" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#1a100c" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20261027a" />
+  <style>
+    .ord { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100svh - 72px); }
+    .ord *, .ord *::before, .ord *::after { box-sizing: border-box; }
+    .ord-media { position: relative; overflow: hidden; background: var(--void-soft); min-height: 320px; }
+    .ord-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+    .ord-panel { padding: clamp(1.5rem, 4vw, 3.5rem) var(--pad); display: flex; flex-direction: column; gap: 1.4rem; min-width: 0; }
+    .ord-panel .shop-title { margin: 0; }
+    .ord-label { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); margin: 0 0 .5rem; }
+    .ord-no { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+    .ord-no code { font-family: var(--font-mono); font-size: clamp(16px, 2.2vw, 22px); color: var(--ink-bright); letter-spacing: .04em; word-break: break-all; }
+    .ord-btn { appearance: none; border: 0; border-radius: 0; background: #965732; color: #f6efe6; font-family: var(--font-mono); font-size: 14px; letter-spacing: .1em; text-transform: uppercase; padding: .85rem 1.2rem; min-height: 44px; cursor: pointer; white-space: nowrap; }
+    .ord-btn:hover { background: #7f4827; }
+    .ord-btn:focus-visible, .ord-form input:focus-visible { outline: 2px solid var(--neon); outline-offset: 2px; }
+    .ord-form { display: flex; gap: .6rem; width: 100%; }
+    .ord-form input { flex: 1 1 auto; min-width: 0; font-family: var(--font-mono); font-size: 16px; color: var(--ink); background: transparent; border: 1px solid var(--line-btn); padding: .8rem .9rem; min-height: 44px; border-radius: 0; }
+    .ord-form input::placeholder { color: var(--mute-dim); }
+    .ord-msg { font-size: 15px; color: var(--warm); margin: 0; min-height: 1.2em; }
+    .ord-piece { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 1.2rem; align-items: start; border-top: 1px solid var(--line); padding-top: 1.2rem; }
+    .ord-prev { width: 100%; aspect-ratio: 4 / 5; background: var(--void-soft); display: flex; }
+    .ord-prev img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ord-meta p { margin: 0 0 .35rem; font-size: 15px; }
+    .ord-meta .ord-title { font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--ink-bright); }
+    .ord-status { display: inline-block; font-family: var(--font-mono); font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--line-btn); padding: .4rem .7rem; margin: .2rem 0 .5rem; }
+    .ord-faq { font-size: 15px; color: var(--mute); margin: 0; }
+    .ord-faq a { color: var(--ink); }
+    .ord small, .ord p { font-size: max(14px, 1em); }
+    @media (max-width: 860px) {
+      .ord { grid-template-columns: 1fr; min-height: 0; }
+      .ord-media { min-height: 0; height: 34svh; max-height: 300px; }
+    }
+    @media (max-width: 480px) {
+      .ord-piece { grid-template-columns: 1fr; }
+      .ord-prev { max-width: 280px; }
+      .ord-form { flex-wrap: wrap; }
+      .ord-form .ord-btn { flex: 1 1 100%; }
+    }
+  </style>
+  <meta name="p:domain_verify" content="7796e72212abc0edba[phone removed]ef2d"/>
+</head>
+<body data-font="body">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="mark" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/works/thyrsus.html">Works</a>
+      <a class="nav-cart" href="/cart.html">Cart <span data-cart-count hidden></span></a>
+    </nav>
+  </header>
+
+  <main class="ord">
+    <div class="ord-media" aria-hidden="true">
+      <video src="library/web/video/grid-ascent_climb.mp4" poster="library/web/video/grid-ascent_climb.jpg"
+        preload="auto" muted loop autoplay playsinline webkit-playsinline disablepictureinpicture
+        controlslist="nodownload nofullscreen noremoteplayback noplaybackrate"></video>
+    </div>
+
+    <section class="ord-panel" aria-label="Order lookup">
+      <div>
+        <p class="eyebrow tag mono" data-font="mono">Order</p>
+        <h1 class="shop-title" data-font="display">Your order.</h1>
+      </div>
+
+      <div id="ord-no-wrap" hidden>
+        <p class="ord-label">Order number</p>
+        <div class="ord-no">
+          <code id="ord-no"></code>
+          <button type="button" class="ord-btn" id="ord-copy">Copy</button>
+        </div>
+      </div>
+
+      <form class="ord-form" id="ord-form" autocomplete="off">
+        <label class="sr-only" for="ord-input" style="position:absolute;left:-9999px">Order number</label>
+        <input id="ord-input" name="n" placeholder="FRM-261007-XXXXX" spellcheck="false" autocapitalize="characters" />
+        <button type="submit" class="ord-btn">Look up</button>
+      </form>
+      <p class="ord-msg" id="ord-msg" role="status" aria-live="polite"></p>
+
+      <div id="ord-result"></div>
+
+      <p class="ord-faq">Questions about size, shipping or refunds? <a href="/faq">Read the FAQ</a></p>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <a class="mark mark--foot" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <p class="foot-tag tag mono" data-font="mono">Limited edition framed prints · ready to&nbsp;hang</p>
+    <p class="foot-copy mono" data-font="mono">© <span class="y"></span> FRAIMOUS · <a href="/faq">FAQ</a> · <a href="/angels">ANGELIC INTELLIGENCE</a> · <a class="foot-quiet" href="/soon">Out&nbsp;of&nbsp;stock</a></p>
+  <style id="foot-credit-css">.foot-credit{margin:.9rem 0 0;font-size:10.5px;line-height:1.2;letter-spacing:.04em;text-align:inherit}.foot-credit a{color:inherit;opacity:.28;text-decoration:none;transition:opacity .2s}.foot-credit a:hover,.foot-credit a:focus-visible{opacity:.55;text-decoration:none}</style><p class="foot-credit mono" data-font="mono"><a href="https://stephanybradford.com" target="_blank" rel="noopener">stephanybradford.com</a></p>
+  <p class="foot-copy foot-legal mono" data-font="mono">© 2025–2026 FRAIMOUS · FRAIMOUS™ is a trademark of FRAIMOUS · AI-assisted original art · Payments by Stripe · <a href="/legal">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/faq">Returns</a> · <a href="/any-likeness">Any Likeness</a> · <a href="mailto:hello@fraimous.com">Contact</a></p>
+  </footer>
+  <script>document.querySelectorAll(".y").forEach((n) => n.textContent = new Date().getFullYear());</script>
+  <script src="cart.js?v=20261120sge"></script>
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const msg = $("ord-msg"), result = $("ord-result"), input = $("ord-input");
+      const showNo = (n) => { $("ord-no").textContent = n; $("ord-no-wrap").hidden = !n; };
+      $("ord-copy").addEventListener("click", async () => {
+        const t = $("ord-no").textContent;
+        try { await navigator.clipboard.writeText(t); }
+        catch { const r = document.createRange(); r.selectNodeContents($("ord-no")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand("copy"); }
+        $("ord-copy").textContent = "Copied"; setTimeout(() => ($("ord-copy").textContent = "Copy"), 1600);
+      });
+      const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+      const render = (o) => {
+        result.textContent = "";
+        (o.items || []).forEach((it) => {
+          const row = el("div", "ord-piece");
+          const prev = el("div", "ord-prev");
+          const img = el("img"); img.src = it.preview; img.alt = (it.title || "Your piece") + " — FRAIMOUS"; img.loading = "lazy";
+          prev.appendChild(img);
+          const meta = el("div", "ord-meta");
+          meta.appendChild(el("p", "ord-title", it.title));
+          meta.appendChild(el("p", "", [it.sizeLabel, it.finishLabel].filter(Boolean).join(" · ")));
+          if ((it.qty || 1) > 1) meta.appendChild(el("p", "", "Qty " + it.qty));
+          if (o.placed) meta.appendChild(el("p", "mono", "Placed " + o.placed));
+          if (o.status) meta.appendChild(el("span", "ord-status", o.status));
+          if (o.statusNote) meta.appendChild(el("p", "", o.statusNote));
+          row.appendChild(prev); row.appendChild(meta); result.appendChild(row);
+        });
+      };
+      const look = (n) => {
+        n = String(n || "").trim();
+        if (!n) return;
+        input.value = n; showNo(n.toUpperCase().startsWith("FRM-") ? n.toUpperCase() : n);
+        msg.textContent = "Looking it up…"; result.textContent = "";
+        fetch("/api/v1/order?n=" + encodeURIComponent(n))
+          .then((r) => r.json().then((j) => ({ s: r.status, j })))
+          .then(({ s, j }) => {
+            if (s === 200 && j.ok) { msg.textContent = ""; if (j.orderNumber) showNo(j.orderNumber); render(j); }
+            else if (s === 429) msg.textContent = "Too many lookups. Try again in a few minutes.";
+            else if (s === 404) msg.textContent = "We couldn’t find that order. Check the number in your Fraimous email (it looks like FRM-261007-AB12C).";
+            else msg.textContent = "Order lookup is unavailable right now. Try again in a minute.";
+          })
+          .catch(() => { msg.textContent = "Order lookup is unavailable right now. Try again in a minute."; });
+      };
+      $("ord-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const n = input.value.trim();
+        const u = new URL(location.href); u.searchParams.set("n", n); history.replaceState(null, "", u);
+        look(n);
+      });
+      const n0 = new URLSearchParams(location.search).get("n");
+      if (n0) look(n0);
+    })();
+  </script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script src="/protect.js?v=20261006j"></script>
+<script src="/consent.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Checkout — FRAIMOUS</title>
+  <meta name="description" content="Place a FRAIMOUS order. Framed prints, ready to hang." />
+  <meta name="theme-color" content="#1a100c" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20261027a" />
+  <style>
+    .field select { appearance: none; -webkit-appearance: none; background: var(--void); border: 1px solid var(--line-btn); color: var(--ink); font-family: var(--font-body); font-size: 15px; padding: 12px 14px; min-height: 48px; width: 100%; border-radius: 0; }
+    .field select:focus { outline: none; border-color: var(--neon); }
+    .chk-payment { margin: 0 0 1rem; }
+    .chk-payment[hidden] { display: none !important; }
+    .chk-promo { margin: 1.25rem 0 1rem; }
+    .chk-promo-row { display: flex; gap: 8px; }
+    .chk-promo-row input { flex: 1; min-width: 0; text-transform: uppercase; }
+    .chk-promo-row .btn { min-height: 48px; padding: 0 18px; }
+    .chk-promo-msg { margin: 0; font-size: 0.85rem; color: var(--mute); }
+    .chk-promo-msg.is-err { color: #d4a574; }
+    .chk-promo-msg.is-ok { color: var(--ink); }
+    .price-was { text-decoration: line-through; color: #5e4c3e; margin-right: .45em; font-weight: 400; }
+    .price-now { color: #1a100c; }
+    .sum-price s { color: var(--mute); margin-right: 0.4em; }
+  </style>
+  <!-- Stripe.js release must match STRIPE_API_VERSION in api/_lib/stripe-rest.js -->
+  <script src="https://js.stripe.com/endive/stripe.js"></script>
+  <meta name="p:domain_verify" content="7796e72212abc0edba[phone removed]ef2d"/>
+</head>
+<body data-font="body">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="mark" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/works/thyrsus.html">Works</a>
+      <a class="nav-cart" href="/cart.html">Cart <span data-cart-count hidden></span></a>
+    </nav>
+  </header>
+
+  <main class="shop-wrap">
+    <p class="eyebrow tag mono" data-font="mono">Checkout</p>
+    <h1 class="shop-title" data-font="display">Checkout</h1>
+    <p class="shop-lede">Place the order. We print it on demand and ship it framed.</p>
+
+    <div id="chk-empty" class="cart-empty">
+      <p>Nothing in the cart yet.</p>
+      <a class="btn btn--solid" href="works/thyrsus.html" data-font="mono">Shop Thyrsus</a>
+    </div>
+
+    <form id="chk-form" class="chk" hidden>
+      <div class="chk-fields">
+        <p class="pdp-opt-label">Contact</p>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required />
+        </div>
+
+        <p class="pdp-opt-label chk-ship-label">Ship to</p>
+        <div class="field">
+          <label for="address">Address</label>
+          <input id="address" name="address" type="text" autocomplete="address-line1" required />
+        </div>
+        <div class="field">
+          <label for="apt">Apt / suite <span class="opt">optional</span></label>
+          <input id="apt" name="apt" type="text" autocomplete="address-line2" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="city">City</label>
+            <input id="city" name="city" type="text" autocomplete="address-level2" required />
+          </div>
+          <div class="field">
+            <label for="state">State</label>
+            <input id="state" name="state" type="text" autocomplete="address-level1" required />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="zip">ZIP / postal code</label>
+            <input id="zip" name="zip" type="text" autocomplete="postal-code" required />
+          </div>
+          <div class="field">
+            <label for="country">Country</label>
+            <select id="country" name="country" autocomplete="country" required>
+              <option value="US" selected>United States</option>
+              <option value="CA">Canada</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <aside class="chk-sum" aria-label="Order summary">
+        <p class="pdp-opt-label">Order</p>
+        <ul class="sum-list" id="sum-list"></ul>
+        <p class="cart-total mono" data-font="mono">from $250</p>
+        <div class="chk-facts">
+          <p>Made on demand. 2–5 business days to print, then ships.</p>
+          <p data-chk-ship></p>
+          <p>Each framed print ships separately.</p>
+          <p>We cannot ship wooden frames to Australia.</p>
+          <p>No returns for a change of mind. We replace a print that arrives damaged or never arrives.</p>
+        </div>
+        <p class="cart-note">Fraimous ships each frame on its own. <a href="/faq">FAQ</a></p>
+        <div class="chk-promo">
+          <div class="field">
+            <label for="promo">Promo code <span class="opt">optional</span></label>
+            <div class="chk-promo-row">
+              <input id="promo" name="promo" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+              <button type="button" class="btn" id="promo-apply" data-font="mono">Apply</button>
+              <button type="button" class="btn" id="promo-remove" data-font="mono" hidden>Remove</button>
+            </div>
+          </div>
+          <p class="chk-promo-msg mono" id="promo-msg" aria-live="polite" hidden></p>
+        </div>
+        <div class="chk-payment" id="chk-payment" hidden>
+          <p class="pdp-opt-label">Payment</p>
+          <div id="payment-element"></div>
+        </div>
+        <p class="chk-err" id="chk-err" hidden>Couldn’t place the order. Try again.</p>
+        <button type="submit" class="btn btn--solid btn--lg" id="chk-pay" data-font="mono" disabled>Continue to payment</button>
+      </aside>
+    </form>
+  </main>
+
+  <footer class="site-foot">
+    <a class="mark mark--foot" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <p class="foot-tag tag mono" data-font="mono">Limited edition framed prints · ready to&nbsp;hang</p>
+    <p class="foot-copy mono" data-font="mono">© <span class="y"></span> FRAIMOUS · <a href="/faq">FAQ</a> · <a href="/angels">ANGELIC INTELLIGENCE</a> · <a class="foot-quiet" href="/soon">Out&nbsp;of&nbsp;stock</a></p>
+  <style id="foot-credit-css">.foot-credit{margin:.9rem 0 0;font-size:10.5px;line-height:1.2;letter-spacing:.04em;text-align:inherit}.foot-credit a{color:inherit;opacity:.28;text-decoration:none;transition:opacity .2s}.foot-credit a:hover,.foot-credit a:focus-visible{opacity:.55;text-decoration:none}</style><p class="foot-credit mono" data-font="mono"><a href="https://stephanybradford.com" target="_blank" rel="noopener">stephanybradford.com</a></p>
+  <p class="foot-copy foot-legal mono" data-font="mono">© 2025–2026 FRAIMOUS · FRAIMOUS™ is a trademark of FRAIMOUS · AI-assisted original art · Payments by Stripe · <a href="/legal">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/faq">Returns</a> · <a href="/any-likeness">Any Likeness</a> · <a href="mailto:hello@fraimous.com">Contact</a></p>
+  </footer>
+  <script>document.querySelectorAll(".y").forEach((n) => n.textContent = new Date().getFullYear());</script>
+  <script src="cart.js?v=20261120sge"></script>
+  <script src="editions.js?v=20261120sge3"></script>
+  <script>
+    (() => {
+      const C = window.FraimousCart;
+      const items = C.read();
+      const empty = document.getElementById("chk-empty");
+      const form = document.getElementById("chk-form");
+      const sum = document.getElementById("sum-list");
+      const pay = document.getElementById("chk-pay");
+
+      const isEmpty = !items.length;
+      empty.hidden = !isEmpty;
+      form.hidden = isEmpty;
+      if (pay) pay.disabled = isEmpty;
+      if (isEmpty) return;
+
+      const shipEl = document.querySelector("[data-chk-ship]");
+      if (shipEl) shipEl.textContent = items.length ? C.checkoutShipLine(items) : "";
+      const totalEl = document.querySelector(".cart-total");
+      if (totalEl && items.length) { if (C.totalPriceHTML) totalEl.innerHTML = C.totalPriceHTML(items); else totalEl.textContent = C.money(C.printTotal(items)); }
+
+      // Line prices are the browser's guess. The server never tells this page which price applies (privacy, 2026-10-10);
+      // once payment opens, the Stripe session total is the real price.
+      let priceMode = null;
+      const lineMoney = (item) => {
+        const opts = priceMode ? { pricing: priceMode } : undefined;
+        if (C.linePriceHTML) return C.linePriceHTML(item, opts);
+        return priceMode
+          ? C.money(C.priceForSize(item.size, item.finish, item.slug, opts) * Math.max(1, parseInt(item.qty, 10) || 1))
+          : C.money(C.lineTotal(item));
+      };
+      const renderLines = (promoLines) => {
+        sum.innerHTML = "";
+        items.forEach((item, i) => {
+          const pl = promoLines && promoLines[i];
+          const li = document.createElement("li");
+          li.className = "sum-line";
+          li.innerHTML = `
+            <img data-cutout alt="" />
+            <div>
+              <p class="sum-title">${C.titleLabel(item)}</p>
+              <p class="sum-opts mono">${C.finishLabel ? C.finishLabel(item.finish) : "Luster"} · ${(item.finish === "canvas") ? "Gallery wrap" : C.frameLabel(item.frame)} · ${C.sizeLabel(item.size, item.finish)} · Qty ${item.qty || 1}</p>
+              <p class="sum-price mono">${pl ? `<s class="price-was">${C.money(pl.originalCents / 100)}</s><span class="price-now">${C.money(pl.lineCents / 100)}</span>` : lineMoney(item)}</p>
+            </div>
+          `;
+          { const im = li.querySelector("img[data-cutout]"); if (im) im.src = C.cutoutSrc(item.slug, item.frame, "", item.size, item.finish); }
+          sum.appendChild(li);
+        });
+      };
+      renderLines(null);
+
+      const err = document.getElementById("chk-err");
+      const btn = form.querySelector("button[type=submit]");
+      const paintShip = () => {
+        if (!shipEl || !items.length) return;
+        shipEl.textContent = C.zipShipLine({
+          zip: document.getElementById("zip").value,
+          country: document.getElementById("country").value,
+          items,
+        });
+      };
+      paintShip();
+      ["zip", "country"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) { el.addEventListener("input", paintShip); el.addEventListener("change", paintShip); }
+      });
+
+      // Pay on this page: Checkout Sessions (ui_mode "elements") + Payment Element.
+      // Step 1 (first submit): create the session, mount the Payment Element. Step 2: confirm.
+      // Fallback: if the server has no publishable key it returns a hosted Checkout url instead; redirect there.
+      const payBox = document.getElementById("chk-payment");
+      const ERR_DEFAULT = "Couldn’t place the order. Try again.";
+      let actions = null;
+      let orderNumber = "";
+      const REGION = {
+        alabama: "AL", alaska: "AK", arizona: "AZ", arkansas: "AR", california: "CA", colorado: "CO", connecticut: "CT",
+        delaware: "DE", "district of columbia": "DC", florida: "FL", georgia: "GA", hawaii: "HI", idaho: "ID", illinois: "IL",
+        indiana: "IN", iowa: "IA", kansas: "KS", kentucky: "KY", louisiana: "LA", maine: "ME", maryland: "MD",
+        massachusetts: "MA", michigan: "MI", minnesota: "MN", mississippi: "MS", missouri: "MO", montana: "MT",
+        nebraska: "NE", nevada: "NV", "new hampshire": "NH", "new jersey": "NJ", "new mexico": "NM", "new york": "NY",
+        "north carolina": "NC", "north dakota": "ND", ohio: "OH", oklahoma: "OK", oregon: "OR", pennsylvania: "PA",
+        "rhode island": "RI", "south carolina": "SC", "south dakota": "SD", tennessee: "TN", texas: "TX", utah: "UT",
+        vermont: "VT", virginia: "VA", washington: "WA", "west virginia": "WV", wisconsin: "WI", wyoming: "WY",
+        "puerto rico": "PR", alberta: "AB", "british columbia": "BC", manitoba: "MB", "new brunswick": "NB",
+        "newfoundland and labrador": "NL", newfoundland: "NL", "nova scotia": "NS", ontario: "ON",
+        "prince edward island": "PE", quebec: "QC", "québec": "QC", saskatchewan: "SK", yukon: "YT",
+        "northwest territories": "NT", nunavut: "NU",
+      };
+      const regionCode = (v) => {
+        const t = String(v || "").trim();
+        if (/^[A-Za-z]{2}$/.test(t)) return t.toUpperCase();
+        return REGION[t.toLowerCase().replace(/\./g, "")] || t;
+      };
+      const readOrder = (live) => {
+        const data = new FormData(form);
+        return {
+          email: String(data.get("email") || "").trim(),
+          name: String(data.get("name") || "").trim(),
+          address: String(data.get("address") || "").trim(),
+          apt: String(data.get("apt") || "").trim(),
+          city: String(data.get("city") || "").trim(),
+          state: String(data.get("state") || "").trim(),
+          zip: String(data.get("zip") || "").trim(),
+          country: String(data.get("country") || "US").trim(),
+          items: live,
+          total: C.money(C.printTotal(live)),
+          shipLine: C.zipShipLine({ zip: String(data.get("zip") || ""), country: String(data.get("country") || ""), items: live }),
+          placedAt: new Date().toISOString(),
+        };
+      };
+      const shippingAddress = (o) => ({
+        name: o.name,
+        address: {
+          line1: o.address,
+          line2: o.apt || undefined,
+          city: o.city,
+          state: regionCode(o.state),
+          postal_code: o.zip,
+          country: o.country === "CA" ? "CA" : "US",
+        },
+      });
+      const showErr = (msg) => {
+        if (!err) return;
+        err.textContent = msg || ERR_DEFAULT;
+        err.hidden = false;
+      };
+      const paintTotal = (session) => {
+        // Stripe requires the page to show session.total.total.amount before confirm().
+        const amt = session && session.total && session.total.total && session.total.total.amount;
+        if (!amt) return;
+        if (totalEl) totalEl.textContent = amt;
+        if (btn && !btn.dataset.busy) btn.textContent = "Pay " + amt;
+      };
+      const setBusy = (label) => {
+        if (!btn) return;
+        btn.dataset.busy = "1";
+        btn.disabled = true;
+        btn.textContent = label;
+      };
+      const clearBusy = () => {
+        if (!btn) return;
+        delete btn.dataset.busy;
+        btn.disabled = false;
+        if (actions) paintTotal(actions.getSession());
+        else btn.textContent = "Continue to payment";
+      };
+
+      // Promo code: MEMBER25 is the only code (25% off ORIGINAL, member's first FRAIMOUS purchase).
+      // /api/promo only checks that the code is valid (same answer for every email). /api/checkout decides
+      // eligibility server-side and bakes it into the session price_data. No Stripe promotion codes.
+      const PROMO_KEY = "fraimous-promo";
+      const promoIn = document.getElementById("promo");
+      const promoBtn = document.getElementById("promo-apply");
+      const promoRm = document.getElementById("promo-remove");
+      const promoMsg = document.getElementById("promo-msg");
+      const emailIn = document.getElementById("email");
+      let promoApplied = "";   // stored code once valid; eligibility is decided at checkout
+      let promoEmail = "";
+      const messageFor = (code, apiMsg) => {
+        if (apiMsg) return apiMsg;
+        if (code === "5N0W84LL3FFCT") return "46% off The Set is already applied. No code needed.";
+        if (code) return `${code} saved. It applies at checkout if this email is eligible.`;
+        return "";
+      };
+      const promoSay = (msg, kind) => {
+        if (!promoMsg) return;
+        promoMsg.textContent = msg || "";
+        promoMsg.classList.toggle("is-err", kind === "err");
+        promoMsg.classList.toggle("is-ok", kind === "ok");
+        promoMsg.hidden = !msg;
+      };
+      const savedPromo = () => { try { return localStorage.getItem(PROMO_KEY) || ""; } catch { return ""; } };
+      const savePromo = (c) => { try { if (c) localStorage.setItem(PROMO_KEY, c); else localStorage.removeItem(PROMO_KEY); } catch { /* ignore */ } };
+      const memberEmail = () => (C.memberEmail ? C.memberEmail() : "") || "";
+      const paintStandard = () => {
+        renderLines(null);
+        // Once payment is open the page must show Stripe's session total.
+        if (actions) paintTotal(actions.getSession());
+        else if (totalEl) { if (C.totalPriceHTML) totalEl.innerHTML = C.totalPriceHTML(items); else totalEl.textContent = C.money(C.printTotal(items)); }
+      };
+      const setApplyLabel = () => {
+        if (promoBtn) promoBtn.textContent = "Apply";
+        if (promoRm) promoRm.hidden = !promoApplied;
+      };
+      const dropPromo = (msg, kind) => {
+        promoApplied = "";
+        promoEmail = "";
+        setApplyLabel();
+        paintStandard();
+        promoSay(msg || "", kind);
+      };
+      // Returns true when the code is applied (or there is no code), false otherwise.
+      const checkPromo = async ({ quiet } = {}) => {
+        const code = String((promoIn && promoIn.value) || "").trim().toUpperCase();
+        if (promoIn) promoIn.value = code;
+        if (!code) { if (promoApplied) dropPromo(""); return true; }
+        const email = String((emailIn && emailIn.value) || "").trim().toLowerCase();
+        if (promoBtn) promoBtn.disabled = true;
+        if (!quiet) promoSay("Checking…");
+        try {
+          const r = await fetch("/api/promo", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code }),
+          });
+          const out = await r.json().catch(() => ({}));
+          if (out && out.ok) {
+            promoApplied = out.code;
+            promoEmail = email;
+            savePromo(out.code);
+            setApplyLabel();
+            paintStandard();
+            promoSay(messageFor(out.code || code, out.message), "ok");
+            return true;
+          }
+          if (out && out.reason !== "check") savePromo("");
+          dropPromo((out && out.message) || "That code isn’t valid.", "err");
+          return false;
+        } catch (ex) {
+          dropPromo("Couldn’t check the code. Try again in a minute.", "err");
+          return false;
+        } finally {
+          if (promoBtn) promoBtn.disabled = false;
+        }
+      };
+      let promoBusy = false;
+      let lastPromoClick = 0;
+      const onApply = async () => {
+        const now = Date.now();
+        if (promoBusy || now - lastPromoClick < 400) return;
+        lastPromoClick = now;
+        const code = String((promoIn && promoIn.value) || "").trim().toUpperCase();
+        // Re-apply of the same code is idempotent; only the Remove control clears it.
+        if (promoApplied && promoApplied === code) {
+          promoSay(promoMsg && promoMsg.textContent ? promoMsg.textContent : `${promoApplied} saved.`, "ok");
+          setApplyLabel();
+          return;
+        }
+        promoBusy = true;
+        try {
+          const ok = await checkPromo();
+          if (ok && promoApplied && actions) await startPayment();
+        } finally {
+          promoBusy = false;
+        }
+      };
+      const onRemove = async () => {
+        if (promoBusy) return;
+        promoBusy = true;
+        try {
+          if (promoIn) promoIn.value = "";
+          savePromo("");
+          dropPromo("Code removed.");
+          if (actions) await startPayment();
+        } finally {
+          promoBusy = false;
+        }
+      };
+      if (promoBtn) promoBtn.addEventListener("click", onApply);
+      if (promoRm) promoRm.addEventListener("click", onRemove);
+      // Enter in the promo box applies the code; it must never submit (= pay) the form.
+      if (promoIn) promoIn.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); onApply(); } });
+      // Code carried from the cart (or a past visit): prefill, and the member email if the field is empty.
+      const carried = savedPromo();
+      if (carried && promoIn && !promoIn.value) promoIn.value = carried;
+      if (emailIn && !emailIn.value && memberEmail()) emailIn.value = memberEmail();
+      if (carried && emailIn && emailIn.value) checkPromo({ quiet: true });
+      // MEMBER25 is tied to the email: re-check when it changes (before payment opens).
+      if (emailIn) emailIn.addEventListener("change", () => {
+        if (actions) return;
+        const now = String(emailIn.value || "").trim().toLowerCase();
+        if ((promoApplied && now !== promoEmail) || (!promoApplied && promoIn && promoIn.value.trim())) checkPromo({ quiet: true });
+      });
+      // Back from the hosted Checkout page (bfcache): un-stick the button.
+      window.addEventListener("pageshow", (e) => { if (e.persisted && btn && btn.dataset.busy) clearBusy(); });
+
+      // Create (or re-create, after a code change) the Checkout Session and mount the Payment Element.
+      let paymentEl = null;
+      const startPayment = async () => {
+        const live = C.read();
+        const order = readOrder(live);
+        // No member flag is sent: the server prices the checkout email from its own member list.
+        if (promoApplied) order.promoCode = promoApplied;
+        if (paymentEl) { try { paymentEl.destroy(); } catch { /* ignore */ } paymentEl = null; }
+        actions = null;
+        document.getElementById("payment-element").innerHTML = "";
+        setBusy("Loading…");
+        try {
+          const ctl = new AbortController();
+          const timer = setTimeout(() => ctl.abort(), 20000);
+          let res;
+          try {
+            res = await fetch("/api/checkout", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(order),
+              signal: ctl.signal,
+            });
+          } catch (fe) {
+            const ex = new Error("network");
+            ex.userMessage = fe && fe.name === "AbortError"
+              ? "Checkout is taking too long. Check your connection and try again."
+              : "Couldn’t reach checkout. Check your connection and try again.";
+            throw ex;
+          } finally {
+            clearTimeout(timer);
+          }
+          const out = await res.json().catch(() => ({}));
+          if (!res.ok && out.message && (res.status === 409 || out.error === "editions")) {
+            // Edition limit: "Thyrsus: Only 3 left." / "Thyrsus: Sold out."
+            const ex = new Error("edition");
+            ex.userMessage = String(out.message);
+            throw ex;
+          }
+          if (!res.ok && res.status !== 429) {
+            const ex = new Error("server");
+            ex.userMessage = String(out.message || "Couldn’t start payment. Try again in a minute.");
+            throw ex;
+          }
+          if (res.status === 429) {
+            const ex = new Error("rate");
+            ex.userMessage = out.message || "Too many tries. Wait a few minutes.";
+            throw ex;
+          }
+          // The response doesn't say which price applied. The session total (painted below) is the real price.
+          // Always label the actual stored code — never fall back to a hardcoded MEMBER25 string.
+          if (promoApplied) promoSay(messageFor(promoApplied), "ok");
+          if (res.ok && out.url && !out.clientSecret) {
+            // Hosted fallback: same order, paid on Stripe's page, back to /thanks?session_id=...
+            if (!/^https:\/\//.test(out.url)) throw new Error("pay");
+            C.saveInquiry(Object.assign({}, order, { orderNumber: out.orderNumber || "" }));
+            btn.textContent = "Redirecting…";
+            window.location.assign(out.url);
+            return;
+          }
+          if (typeof window.Stripe !== "function") throw new Error("stripe.js");
+          if (!res.ok || !out.clientSecret || !out.publishableKey) throw new Error("pay");
+          orderNumber = out.orderNumber || "";
+          C.saveInquiry(Object.assign({}, order, { orderNumber }));
+          const stripe = window.Stripe(out.publishableKey);
+          const checkout = stripe.initCheckoutElementsSdk({
+            clientSecret: out.clientSecret,
+            elementsOptions: {
+              appearance: {
+                theme: "night",
+                variables: {
+                  colorPrimary: "#d4a574",
+                  colorBackground: "#1a100c",
+                  colorText: "#f0e6dc",
+                  colorDanger: "#c45a38",
+                  fontFamily: "Instrument Sans, Helvetica Neue, system-ui, sans-serif",
+                  borderRadius: "0px",
+                },
+              },
+              fonts: [{ cssSrc: "https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" }],
+            },
+          });
+          checkout.on("change", paintTotal);
+          payBox.hidden = false;
+          paymentEl = checkout.createPaymentElement();
+          paymentEl.mount("#payment-element");
+          const loaded = await checkout.loadActions();
+          if (!loaded || loaded.type !== "success") throw new Error("pay");
+          actions = loaded.actions;
+          // Ship-to goes to Stripe (shipping_address_collection), not into metadata.
+          const upd = await actions.updateShippingAddress(shippingAddress(order));
+          // Email and name are on the session now; keep them fixed for this payment.
+          ["email", "name"].forEach((id) => { const el = document.getElementById(id); if (el) el.readOnly = true; });
+          clearBusy();
+          if (upd && upd.type === "error") showErr(upd.error && upd.error.message);
+        } catch (ex) {
+          actions = null;
+          payBox.hidden = true;
+          document.getElementById("payment-element").innerHTML = "";
+          clearBusy();
+          showErr(ex && ex.userMessage);
+        }
+      };
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const live = C.read();
+        if (!live.length) {
+          form.hidden = true;
+          empty.hidden = false;
+          if (pay) pay.disabled = true;
+          return;
+        }
+        const order = readOrder(live);
+        if (err) err.hidden = true;
+
+        if (!actions) {
+          // A typed code that hasn't been applied yet: check it first; stop on a quiet message if it fails.
+          const typed = String((promoIn && promoIn.value) || "").trim().toUpperCase();
+          if (typed && !promoApplied) {
+            const ok = await checkPromo();
+            if (!ok) { if (promoIn) promoIn.focus(); return; }
+          }
+          await startPayment();
+          return;
+        }
+
+        setBusy("Paying…");
+        C.saveInquiry(Object.assign({}, order, { orderNumber }));
+        try {
+          paintTotal(actions.getSession());
+          const result = await actions.confirm({ shippingAddress: shippingAddress(order) });
+          // On success Stripe redirects to return_url (/thanks?session_id=...).
+          if (result && result.type === "error") {
+            clearBusy();
+            showErr(result.error && result.error.message);
+          }
+        } catch (ex) {
+          clearBusy();
+          showErr();
+        }
+      });
+    })();
+  </script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script src="/join.js?v=20261109chk"></script>
+<script src="/protect.js?v=20261006j"></script>
+<script src="/consent.js" defer></script>
+</body>
+</html>

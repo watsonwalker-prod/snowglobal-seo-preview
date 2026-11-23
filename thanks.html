@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Order placed — FRAIMOUS</title>
+  <meta name="description" content="Your FRAIMOUS order is in." />
+  <meta name="theme-color" content="#1a100c" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20261027a" />
+  <meta name="p:domain_verify" content="7796e72212abc0edba[phone removed]ef2d"/>
+</head>
+<body data-font="body">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="mark" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/works/thyrsus.html">Works</a>
+      <a class="nav-cart" href="/cart.html">Cart <span data-cart-count hidden></span></a>
+    </nav>
+  </header>
+
+  <main class="shop-wrap thanks-wrap">
+    <p class="eyebrow tag mono" data-font="mono">Order</p>
+    <h1 class="shop-title" data-font="display">It’s in.</h1>
+    <p class="shop-lede" id="thanks-lede">You ordered Thyrsus. We’ll email you at the address you left.</p>
+
+    <div class="thanks-card" id="thanks-card">
+      <p class="pdp-opt-label">Order <span class="mono" id="thanks-ordno"></span></p>
+      <div id="thanks-order"></div>
+      <p class="pdp-opt-label thanks-ship-label">Ship to</p>
+      <div id="thanks-ship" class="thanks-ship"></div>
+      <p class="cart-total mono" data-font="mono">from $250</p>
+      <p class="cart-note">Made on demand. <a href="/faq">Shipping &amp; refunds</a></p>
+    </div>
+
+    <div class="thanks-actions">
+      <a class="btn btn--solid btn--lg" href="/" data-font="mono">Back to FRAIMOUS</a>
+      <a class="btn" href="/faq" data-font="mono">FAQ</a>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <a class="mark mark--foot" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <p class="foot-tag tag mono" data-font="mono">Limited edition framed prints · ready to&nbsp;hang</p>
+    <p class="foot-copy mono" data-font="mono">© <span class="y"></span> FRAIMOUS · <a href="/faq">FAQ</a> · <a href="/angels">ANGELIC INTELLIGENCE</a> · <a class="foot-quiet" href="/soon">Out&nbsp;of&nbsp;stock</a></p>
+  <style id="foot-credit-css">.foot-credit{margin:.9rem 0 0;font-size:10.5px;line-height:1.2;letter-spacing:.04em;text-align:inherit}.foot-credit a{color:inherit;opacity:.28;text-decoration:none;transition:opacity .2s}.foot-credit a:hover,.foot-credit a:focus-visible{opacity:.55;text-decoration:none}</style><p class="foot-credit mono" data-font="mono"><a href="https://stephanybradford.com" target="_blank" rel="noopener">stephanybradford.com</a></p>
+  <p class="foot-copy foot-legal mono" data-font="mono">© 2025–2026 FRAIMOUS · FRAIMOUS™ is a trademark of FRAIMOUS · AI-assisted original art · Payments by Stripe · <a href="/legal">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/faq">Returns</a> · <a href="/any-likeness">Any Likeness</a> · <a href="mailto:hello@fraimous.com">Contact</a></p>
+  </footer>
+  <script>document.querySelectorAll(".y").forEach((n) => n.textContent = new Date().getFullYear());</script>
+  <script src="cart.js?v=20261120sge"></script>
+  <script>
+    (() => {
+      const C = window.FraimousCart;
+      const sid = new URLSearchParams(location.search).get("session_id");
+      const ordNo = document.getElementById("thanks-ordno");
+      // /api/paid only reads the session (no emails are sent from here; the Stripe webhook does that).
+      const paintPaid = (out) => {
+        if (!out) return;
+        if (out.paid) {
+          C.clear();
+          if (ordNo && out.orderNumber) ordNo.textContent = "· " + out.orderNumber;
+          const items = Array.isArray(out.items) ? out.items : [];
+          const named = items.map((i) => i.title).filter(Boolean);
+          const lede = document.getElementById("thanks-lede");
+          if (lede && named.length) {
+            const list = named.length === 1 ? named[0] : named.slice(0, -1).join(", ") + " and " + named[named.length - 1];
+            lede.textContent = "You ordered " + list + ". We’ll email you at " + (out.email || "the address you left") + ".";
+          }
+          const orderEl = document.getElementById("thanks-order");
+          if (orderEl && !orderEl.querySelector(".sum-line") && items.length) {
+            orderEl.textContent = "";
+            items.forEach((it) => {
+              const p = document.createElement("p");
+              p.className = "sum-title";
+              p.textContent = it.title + " · " + (it.sizeLabel || it.size || "") + " · Qty " + (it.qty || 1);
+              orderEl.appendChild(p);
+            });
+          }
+          const totalEl = document.querySelector(".cart-total");
+          if (totalEl && out.amountFormatted) {
+            totalEl.textContent = out.amountFormatted + (out.shipping && out.shipping.formatted ? " incl. " + out.shipping.formatted + " shipping" : "");
+          }
+          const a = out.shipTo;
+          const shipEl = document.getElementById("thanks-ship");
+          if (a && a.name && shipEl) {
+            const label = document.querySelector(".thanks-ship-label");
+            if (label) label.hidden = false;
+            shipEl.textContent = "";
+            [a.name, out.email, [a.line1, a.line2].filter(Boolean).join(", "),
+              [a.city, [a.state, a.postal_code].filter(Boolean).join(" ")].filter(Boolean).join(", "), a.country]
+              .filter(Boolean)
+              .forEach((l) => { const p = document.createElement("p"); p.textContent = l; shipEl.appendChild(p); });
+          }
+        } else if (out.status === "open") {
+          const lede = document.getElementById("thanks-lede");
+          if (lede) lede.innerHTML = "Payment didn’t go through, so nothing was charged. <a href='/checkout'>Try again</a>.";
+          document.querySelector(".shop-title").textContent = "Not yet.";
+        } else if (out.status === "complete" && out.payment_status === "unpaid") {
+          const lede = document.getElementById("thanks-lede");
+          if (lede) lede.textContent = "Your payment is processing. We’ll email you as soon as it clears.";
+        }
+      };
+      if (sid) {
+        fetch("/api/paid?session_id=" + encodeURIComponent(sid))
+          .then((r) => r.json())
+          .then((out) => setTimeout(() => paintPaid(out), 0))
+          .catch(() => {});
+      }
+      const inquiry = C.readInquiry();
+      const order = document.getElementById("thanks-order");
+      const ship = document.getElementById("thanks-ship");
+      if (!inquiry || !inquiry.items || !inquiry.items.length) {
+        order.innerHTML = "<p class='shop-lede'>Nothing on this tab.</p>";
+        document.querySelector(".thanks-ship-label").hidden = true;
+        return;
+      }
+
+      const lede = document.getElementById("thanks-lede");
+      const named = inquiry.items.map((i) => C.titleLabel(i)).filter(Boolean);
+      if (lede && named.length) {
+        const list = named.length === 1
+          ? named[0]
+          : named.slice(0, -1).join(", ") + " and " + named[named.length - 1];
+        lede.textContent = "You ordered " + list + ". We’ll email you at the address you left.";
+      }
+
+      const totalEl = document.querySelector(".cart-total");
+      if (totalEl) totalEl.textContent = C.money(C.printTotal(inquiry.items));
+
+      inquiry.items.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "sum-line";
+        row.innerHTML = `
+          <img src="${C.cutoutSrc(item.slug, item.frame, "", item.size, item.finish)}" alt="" />
+          <div>
+            <p class="sum-title">${C.titleLabel(item)}</p>
+            <p class="sum-opts mono">${C.frameLabel(item.frame)} · ${C.sizeLabel(item.size, item.finish)} · Qty ${item.qty || 1}</p>
+            <p class="sum-price mono">${C.money(C.lineTotal(item))}</p>
+          </div>
+        `;
+        order.appendChild(row);
+      });
+
+      const lines = [
+        inquiry.name,
+        inquiry.email,
+        inquiry.address,
+        inquiry.apt,
+        [inquiry.city, inquiry.state, inquiry.zip].filter(Boolean).join(", "),
+        inquiry.country,
+      ].filter(Boolean);
+      ship.innerHTML = lines.map((l) => `<p>${l}</p>`).join("");
+    })();
+  </script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script src="/protect.js?v=20261006j"></script>
+<script src="/consent.js" defer></script>
+</body>
+</html>

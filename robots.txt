@@ -1,0 +1,24 @@
+User-agent: Twitterbot
+Allow: /
+Allow: /og.jpg
+Allow: /library/keepers/
+Allow: /library/mocks/
+
+User-agent: facebookexternalhit
+Allow: /
+Allow: /og.jpg
+
+User-agent: *
+Allow: /
+Allow: /snowglobal
+Allow: /works/
+Disallow: /library/print
+Disallow: /library/print-ready
+Disallow: /library/inbox
+Disallow: /library/iterations
+Disallow: /library/gun-girls
+Disallow: /library/scenery
+Disallow: /library/rejects
+Disallow: /library/sources
+
+Sitemap: https://fraimous.com/sitemap.xml

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup — FRAIMOUS</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#1a100c" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20261106a" />
+  <style>
+    .desk { max-width: 42rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    .desk h1 { margin: .4rem 0 0; }
+    .desk h2 { margin: 2rem 0 .4rem; font-size: 1.35rem; }
+    .desk p, .desk li { font-size: 1.02rem; }
+    .desk ul { margin: .4rem 0 0; padding-left: 1.1rem; }
+    .desk li { margin: .35rem 0; }
+    .desk .when { opacity: .7; }
+  </style>
+</head>
+<body data-font="body">
+  <div class="grain" aria-hidden="true"></div>
+  <header class="nav">
+    <a class="mark" href="/" aria-label="FRAIMOUS"><img src="images/fraimous-wordmark.png" alt="FRAIMOUS" /></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/snowglobal">Snow Global</a>
+      <a href="/">Main site</a>
+    </nav>
+  </header>
+  <main class="desk">
+    <p class="eyebrow tag mono when" data-font="mono">Checked Friday, Nov 6, 2026</p>
+    <h1 data-font="display">Setup</h1>
+    <p>Bookmark this page. It is not linked from the shop.</p>
+
+    <h2 data-font="display">How it is supposed to work</h2>
+    <ul>
+      <li>fraimous.com is the main shop. <a href="https://fraimous.com/snowglobal">fraimous.com/snowglobal</a> is its own splash.</li>
+      <li>The piece pages take the payment. Stripe charges the card.</li>
+      <li>After the card clears, the large print file is sent to Printful. Printful prints and ships.</li>
+    </ul>
+
+    <h2 data-font="display">Status</h2>
+    <ul>
+      <li>Payment: ready. Buy Now, Add to cart, and a live Stripe checkout for The Point all answered today. The test was not paid.</li>
+      <li>Prices: from $250 / from $500 on the splash. Gallery 24×36 is $330.63, or $661.26 for the pair. Code 5N0W84LL3FFCT is 46% off The Set only ($357.08 at gallery).</li>
+      <li>Films: the shop mocks and the Snow Global lodge film were playing on their own.</li>
+      <li>Printer: not connected. A paid order emails you and stops.</li>
+    </ul>
+
+    <h2 data-font="display">The printer tool we already have</h2>
+    <ul>
+      <li>It can make a Printful catalog item from a public image link. It does not run when someone pays.</li>
+      <li>The Printful login on this computer is still the placeholder, so that tool cannot sign in.</li>
+      <li>The large files for The Point and The Embrace are on this computer. Printful cannot fetch a file that is not on the web.</li>
+      <li>Snow Global has no Printful product ids, so the pay hook refuses to guess one.</li>
+    </ul>
+
+    <h2 data-font="display">Needs work</h2>
+    <ul>
+      <li>A real Printful login, then the product ids for these three pieces.</li>
+      <li>The pay hook has to send the large file after Stripe says paid. That step is not built onto the payment. The older tool only creates a catalog item.</li>
+    </ul>
+
+    <h2 data-font="display">Being checked right now</h2>
+    <p>Nothing.</p>
+  </main>
+</body>
+</html>
